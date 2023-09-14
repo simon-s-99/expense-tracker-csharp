@@ -25,18 +25,20 @@ namespace ExpenseTracker
 
 
             int menu = ShowMenu("Vad vill du göra?", new[]
-           {
-                "- Lägg till utgift",
-                "- Visa alla utgifter",
-                "- Visa summa per katerogi",
-                "- Ändra utgift",
-                "- Ta bort enskild utgift",
-                "- Ta bort samtliga utgifter",
-                "- Avsluta"
+            {
+                "Lägg till utgift",
+                "Visa alla utgifter",
+                "Visa summa per katerogi",
+                "Ändra utgift",
+                "Ta bort enskild utgift",
+                "Ta bort samtliga utgifter",
+                "Avsluta"
             });
             Console.Clear();
             if (menu == 0)
             {
+                Console.WriteLine("Namn:");
+                string name = Console.ReadLine();
 
             }
 
