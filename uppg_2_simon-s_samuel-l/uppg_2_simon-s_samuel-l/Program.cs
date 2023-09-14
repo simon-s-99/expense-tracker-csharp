@@ -10,11 +10,11 @@ namespace ExpenseTracker
     public class Expense
     {
         // Add variables here.
-        string Name; 
-        string Category;
-        decimal Price;
-        decimal VAT;
-        decimal PriceWithoutVAT;
+        public string Name;
+        public string Category;
+        public decimal Price;
+        public decimal VAT;
+        public decimal PriceWithoutVAT;
     }
 
     public class Program
@@ -24,7 +24,7 @@ namespace ExpenseTracker
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             // Write the main program code here.
-
+            
             // pris inkl moms
             //pris exl moms
             // kategori + momsen på den/det
@@ -117,6 +117,35 @@ namespace ExpenseTracker
             return sum;
         }
 
+        // method to get VAT associated with category
+        public static double GetVAT(string category)
+        {
+            double rValue = 0.0;
+            switch (category)
+            {
+                case "Utbildning":
+                    // Change nothing since rValue is already 0 
+                    break;
+
+                case "Böcker":
+                    rValue = 0.06; // books = 6% VAT
+                    break;
+
+                case "Livsmedel":
+                    rValue = 0.12; // food = 12% VAT
+                    break;
+
+                case "Övrigt":
+                    rValue = 0.25; // other = 25% VAT
+                    break;
+
+                default:
+                    // Handles incorrect input, mainly for testing 
+                    break;
+            }
+            return rValue; 
+        }
+
         // Do not change this method.
         // For more information about ShowMenu: https://startcoding.app/console/
         public static int ShowMenu(string prompt, IEnumerable<string> options)
@@ -198,24 +227,68 @@ namespace ExpenseTracker
     }
 
     [TestClass]
-    public class ProgramTests
+    public class UnitTests
     {
         [TestMethod]
-        public void ExampleTest1()
+        public void SumExpensesTest1()
         {
             // Write code here to test the SumExpenses method.
         }
 
         [TestMethod]
-        public void ExampleTest2()
+        public void SumExpensesTest2()
         {
             // Write code here to test the SumExpenses method.
         }
 
         [TestMethod]
-        public void ExampleTest3()
+        public void SumExpensesTest3()
         {
             // Write code here to test the SumExpenses method.
+        }
+
+        [TestMethod]
+        public void GetVATEducation()
+        {
+            string testInput = "Utbildning";
+            double expected = 0.0;
+            double result = Program.GetVAT(testInput);
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void GetVATBooks()
+        {
+            string testInput = "Böcker";
+            double expected = 0.06;
+            double result = Program.GetVAT(testInput);
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void GetVATFood()
+        {
+            string testInput = "Livsmedel";
+            double expected = 0.12;
+            double result = Program.GetVAT(testInput);
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        public void GetVATOther()
+        {
+            string testInput = "Övrigt";
+            double expected = 0.25;
+            double result = Program.GetVAT(testInput);
+            Assert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void GetVATEmptyParameter()
+        {
+            string testInput = "";
+            double expected = 0.0;
+            double result = Program.GetVAT(testInput);
+            Assert.AreEqual(expected, result);
         }
     }
 }
