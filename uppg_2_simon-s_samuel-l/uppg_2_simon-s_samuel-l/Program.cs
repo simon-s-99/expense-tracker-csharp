@@ -13,7 +13,7 @@ namespace ExpenseTracker
         public string Name;
         public string Category;
         public decimal Price;
-        public decimal VAT;
+        public double VAT;
         public decimal PriceWithoutVAT;
     }
 
@@ -47,9 +47,12 @@ namespace ExpenseTracker
                 Console.Write("Namn: ");
                 string name = Console.ReadLine();
                 Console.Write("Pris: ");
-                double price = double.Parse(Console.ReadLine());
+                decimal price = decimal.Parse(Console.ReadLine());
 
-                int category = ShowMenu("Kategori", new[]
+                string category = "";
+                double vat = 0.0;
+
+                int categoryChoice = ShowMenu("Kategori", new[]
                 {
                     "Utbildning",
                     "Böcker,",
@@ -57,11 +60,34 @@ namespace ExpenseTracker
                     "Övrigt"
                 });
                 Console.Clear();
-                if (category == 0)
+                if (categoryChoice == 0)
                 {
-
+                    category = "Utbildning";
+                    vat = GetVAT(category);
                 }
-
+                else if (categoryChoice == 1)
+                {
+                    category = "Böcker";
+                    vat = GetVAT(category);
+                }
+                else if (categoryChoice == 2)
+                {
+                    category = "Livsmedel";
+                    vat = GetVAT(category);
+                }
+                else 
+                {
+                    category = "Övrigt";
+                    vat = GetVAT(category);
+                }
+                Expense expense = new Expense
+                {
+                    Name = name,
+                    Price = price,
+                    Category = category,
+                    VAT = vat
+                };
+                Expenses.Add(expense);
                
             }
             if (menu == 1)
@@ -97,12 +123,11 @@ namespace ExpenseTracker
             }
             else
             {
-                //Ändra dessa till redan tillagda utgifter.
-                foreach (Expense Expense in Expenses)
+                Console.WriteLine("Utgifter: ");
+                Console.WriteLine();
+                foreach (Expense expense in Expenses)
                 {
-                    Console.WriteLine("- " + FullName(contact) +
-                        ", " + contact.Email + ", " + contact.PhoneNumber
-                    );)
+                    Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + "kr (" + expense.Category + ") ");           
                 }
             }
         }
