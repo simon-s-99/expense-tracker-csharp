@@ -16,10 +16,47 @@ namespace ExpenseTracker
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            Console.WriteLine("hejsan");
-            Console.WriteLine("yo");
-
             // Write the main program code here.
+
+            // pris inkl moms
+            //pris exl moms
+            // kategori + momsen på den/det
+            // namn
+
+
+            int menu = ShowMenu("Vad vill du göra?", new[]
+           {
+                "- Lägg till utgift",
+                "- Visa alla utgifter",
+                "- Visa summa per katerogi",
+                "- Ändra utgift",
+                "- Ta bort enskild utgift",
+                "- Ta bort samtliga utgifter",
+                "- Avsluta"
+            });
+            Console.Clear();
+            if (menu == 0)
+            {
+
+            }
+
+            {
+                Console.WriteLine("Kategori: ");
+                string name = Console.ReadLine();
+                int submenu = ShowMenu("", new[]
+                {
+                    "Utbildning",
+                    "Böcker",
+                    "Livsmedel",
+                    "Övrigt",
+                });
+
+
+
+
+            }
+
+
         }
 
         // Return the sum of all expenses in the specified list, with or without VAT based on the second parameter.
