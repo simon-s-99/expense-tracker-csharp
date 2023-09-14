@@ -37,8 +37,9 @@ namespace ExpenseTracker
             Console.Clear();
             if (menu == 0)
             {
-                Console.WriteLine("Namn:");
+                Console.Write("Namn:");
                 string name = Console.ReadLine();
+                Console.Write("Pris:");
 
             }
 
