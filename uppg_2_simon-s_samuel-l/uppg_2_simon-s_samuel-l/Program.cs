@@ -9,6 +9,11 @@ namespace ExpenseTracker
     public class Expense
     {
         // Add variables here.
+        string Name; 
+        string Category;
+        decimal Price;
+        decimal VAT;
+        decimal PriceWithoutVAT;
     }
 
     public class Program
