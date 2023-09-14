@@ -16,6 +16,7 @@ namespace ExpenseTracker
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            Console.WriteLine("hejsan");
 
             // Write the main program code here.
         }
