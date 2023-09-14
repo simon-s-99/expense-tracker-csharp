@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 
@@ -12,12 +13,13 @@ namespace ExpenseTracker
         public string Name;
         public string Category;
         public decimal Price;
-        public decimal VAT;
+        public double VAT;
         public decimal PriceWithoutVAT;
     }
 
     public class Program
     {
+        public static List<Expense> Expenses = new List<Expense>();
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
@@ -42,30 +44,94 @@ namespace ExpenseTracker
             Console.Clear();
             if (menu == 0)
             {
-                Console.Write("Namn:");
+                Console.Write("Namn: ");
                 string name = Console.ReadLine();
-                Console.Write("Pris:");
+                Console.Write("Pris: ");
+                decimal price = decimal.Parse(Console.ReadLine());
 
-            }
+                string category = "";
+                double vat = 0.0;
 
-            {
-                Console.WriteLine("Kategori: ");
-                string name = Console.ReadLine();
-                int submenu = ShowMenu("", new[]
+                int categoryChoice = ShowMenu("Kategori", new[]
                 {
                     "Utbildning",
-                    "Böcker",
+                    "Böcker,",
                     "Livsmedel",
-                    "Övrigt",
+                    "Övrigt"
                 });
-
-
-
-
+                Console.Clear();
+                if (categoryChoice == 0)
+                {
+                    category = "Utbildning";
+                    vat = GetVAT(category);
+                }
+                else if (categoryChoice == 1)
+                {
+                    category = "Böcker";
+                    vat = GetVAT(category);
+                }
+                else if (categoryChoice == 2)
+                {
+                    category = "Livsmedel";
+                    vat = GetVAT(category);
+                }
+                else 
+                {
+                    category = "Övrigt";
+                    vat = GetVAT(category);
+                }
+                Expense expense = new Expense
+                {
+                    Name = name,
+                    Price = price,
+                    Category = category,
+                    VAT = vat
+                };
+                Expenses.Add(expense);
+               
             }
-
-
+            if (menu == 1)
+            {
+                // Visa alla utgifter
+            }
+            if (menu == 2)
+            {
+                //Visa summa per kategori
+            }
+            if (menu == 3)
+            {
+                // Ändra på någon utgift
+            }
+            if (menu == 4)
+            {
+                // Ta bort utgift
+            }
+            if (menu == 5)
+            {
+                //Ta bort alla utgifter
+            }
+            if (menu == 6)
+            {
+                Console.Write("Exiting program. Goodbye!");
+            }
         }
+        public static void ListExpenses()
+        {
+            if (Expenses.Count == 0)
+            {
+                Console.WriteLine("Du har inte lagt till några utgifter ännu");
+            }
+            else
+            {
+                Console.WriteLine("Utgifter: ");
+                Console.WriteLine();
+                foreach (Expense expense in Expenses)
+                {
+                    Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + "kr (" + expense.Category + ") ");           
+                }
+            }
+        }
+
 
         // Return the sum of all expenses in the specified list, with or without VAT based on the second parameter.
         // This method *must* be in the program and *must* be used in both the main program and in the tests.
