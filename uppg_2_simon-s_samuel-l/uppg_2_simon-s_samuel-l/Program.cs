@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 
@@ -18,6 +19,7 @@ namespace ExpenseTracker
 
     public class Program
     {
+        public static List<Expense> Expenses = new List<Expense>();
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
@@ -42,30 +44,69 @@ namespace ExpenseTracker
             Console.Clear();
             if (menu == 0)
             {
-                Console.Write("Namn:");
+                Console.Write("Namn: ");
                 string name = Console.ReadLine();
-                Console.Write("Pris:");
+                Console.Write("Pris: ");
+                double price = double.Parse(Console.ReadLine());
 
-            }
-
-            {
-                Console.WriteLine("Kategori: ");
-                string name = Console.ReadLine();
-                int submenu = ShowMenu("", new[]
+                int category = ShowMenu("Kategori", new[]
                 {
                     "Utbildning",
-                    "Böcker",
+                    "Böcker,",
                     "Livsmedel",
-                    "Övrigt",
+                    "Övrigt"
                 });
+                Console.Clear();
+                if (category == 0)
+                {
 
+                }
 
-
-
+               
             }
-
-
+            if (menu == 1)
+            {
+                // Visa alla utgifter
+            }
+            if (menu == 2)
+            {
+                //Visa summa per kategori
+            }
+            if (menu == 3)
+            {
+                // Ändra på någon utgift
+            }
+            if (menu == 4)
+            {
+                // Ta bort utgift
+            }
+            if (menu == 5)
+            {
+                //Ta bort alla utgifter
+            }
+            if (menu == 6)
+            {
+                Console.Write("Exiting program. Goodbye!");
+            }
         }
+        public static void ListExpenses()
+        {
+            if (Expenses.Count == 0)
+            {
+                Console.WriteLine("Du har inte lagt till några utgifter ännu");
+            }
+            else
+            {
+                //Ändra dessa till redan tillagda utgifter.
+                foreach (Expense Expense in Expenses)
+                {
+                    Console.WriteLine("- " + FullName(contact) +
+                        ", " + contact.Email + ", " + contact.PhoneNumber
+                    );)
+                }
+            }
+        }
+
 
         // Return the sum of all expenses in the specified list, with or without VAT based on the second parameter.
         // This method *must* be in the program and *must* be used in both the main program and in the tests.

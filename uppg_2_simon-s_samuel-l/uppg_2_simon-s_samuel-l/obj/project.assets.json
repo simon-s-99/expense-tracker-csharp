@@ -5840,19 +5840,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\simon\\.nuget\\packages\\": {}
+    "C:\\Users\\zaaam\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
+      "projectUniqueName": "C:\\Users\\zaaam\\OneDrive\\Dokument\\GitHub\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
       "projectName": "uppg_2_simon-s_samuel-l",
-      "projectPath": "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
-      "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\obj\\",
+      "projectPath": "C:\\Users\\zaaam\\OneDrive\\Dokument\\GitHub\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
+      "packagesPath": "C:\\Users\\zaaam\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\zaaam\\OneDrive\\Dokument\\GitHub\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\zaaam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5860,6 +5865,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -5911,7 +5917,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
