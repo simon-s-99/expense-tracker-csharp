@@ -5,6 +5,16 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
 
+// Assignment nr. 2 
+// by Simon Sörqvist & Samuel Lööf 
+
+/*
+ * Check before turning in: 
+ * 
+ * Removed unnecessary comments? i.e. Jakobs instruktioner?
+ * Are there any rounding errors ? 
+ */
+
 namespace ExpenseTracker
 {
     public class Expense
@@ -13,8 +23,9 @@ namespace ExpenseTracker
         public string Name;
         public string Category;
         public decimal Price;
-        public double VAT;
-        public decimal PriceWithoutVAT;
+        public decimal VAT;
+        public decimal PriceWithoutVAT; // is this needed ? 
+                                    // made redundant by GetVAT() ? 
     }
 
     public class Program
@@ -86,7 +97,7 @@ namespace ExpenseTracker
             decimal price = decimal.Parse(Console.ReadLine());
 
             string category = "";
-            double vat = 0.0;
+            decimal vat = 0.0m;
 
             int categoryChoice = ShowMenu("Kategori", new[]
             {
@@ -94,7 +105,7 @@ namespace ExpenseTracker
                         "Böcker,",
                         "Livsmedel",
                         "Övrigt"
-                    });
+            });
 
             if (categoryChoice == 0)
             {
@@ -156,19 +167,33 @@ namespace ExpenseTracker
         }
 
 
-        // Return the sum of all expenses in the specified list, with or without VAT based on the second parameter.
-        // This method *must* be in the program and *must* be used in both the main program and in the tests.
+        // Return the sum of all expenses in the specified list, with or without VAT based on the
+        // second parameter. This method *must* be in the program and *must* be used in
+        // both the main program and in the tests.
         public static decimal SumExpenses(List<Expense> expenses, bool includeVAT)
         {
             decimal sum = 0;
             // Implement the rest of this method here.
+
+            foreach (Expense expense in expenses)
+            {
+                if (includeVAT)
+                {
+                    sum += expense.Price * (1 - GetVAT(expense.Category));
+                }
+                else
+                {
+                    sum += expense.Price;
+                }
+            }
+
             return sum;
         }
 
         // method to get VAT associated with category
-        public static double GetVAT(string category)
+        public static decimal GetVAT(string category)
         {
-            double rValue = 0.0;
+            decimal rValue = 0.0m;
             switch (category)
             {
                 case "Utbildning":
@@ -176,15 +201,15 @@ namespace ExpenseTracker
                     break;
 
                 case "Böcker":
-                    rValue = 0.06; // books = 6% VAT
+                    rValue = 0.06m; // books = 6% VAT
                     break;
 
                 case "Livsmedel":
-                    rValue = 0.12; // food = 12% VAT
+                    rValue = 0.12m; // food = 12% VAT
                     break;
 
                 case "Övrigt":
-                    rValue = 0.25; // other = 25% VAT
+                    rValue = 0.25m; // other = 25% VAT
                     break;
 
                 default:
@@ -299,8 +324,8 @@ namespace ExpenseTracker
         public void GetVATEducation()
         {
             string testInput = "Utbildning";
-            double expected = 0.0;
-            double result = Program.GetVAT(testInput);
+            decimal expected = 0.0m;
+            decimal result = Program.GetVAT(testInput);
             Assert.AreEqual(expected, result);
         }
 
@@ -308,8 +333,8 @@ namespace ExpenseTracker
         public void GetVATBooks()
         {
             string testInput = "Böcker";
-            double expected = 0.06;
-            double result = Program.GetVAT(testInput);
+            decimal expected = 0.06m;
+            decimal result = Program.GetVAT(testInput);
             Assert.AreEqual(expected, result);
         }
 
@@ -317,8 +342,8 @@ namespace ExpenseTracker
         public void GetVATFood()
         {
             string testInput = "Livsmedel";
-            double expected = 0.12;
-            double result = Program.GetVAT(testInput);
+            decimal expected = 0.12m;
+            decimal result = Program.GetVAT(testInput);
             Assert.AreEqual(expected, result);
         }
 
@@ -326,16 +351,16 @@ namespace ExpenseTracker
         public void GetVATOther()
         {
             string testInput = "Övrigt";
-            double expected = 0.25;
-            double result = Program.GetVAT(testInput);
+            decimal expected = 0.25m;
+            decimal result = Program.GetVAT(testInput);
             Assert.AreEqual(expected, result);
         }
         [TestMethod]
         public void GetVATEmptyParameter()
         {
             string testInput = "";
-            double expected = 0.0;
-            double result = Program.GetVAT(testInput);
+            decimal expected = 0.0m;
+            decimal result = Program.GetVAT(testInput);
             Assert.AreEqual(expected, result);
         }
     }
