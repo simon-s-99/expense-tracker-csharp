@@ -63,7 +63,7 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 1) // list all expenses
                 {
-                    // code here
+                    ListExpenses();
                 }
                 else if (mainMenu == 2) // show sum per category 
                 {
@@ -151,7 +151,7 @@ namespace ExpenseTracker
             Console.Clear();
         }
 
-        public static void ListExpenses()
+        public static void ListExpenses(List<Expense> expenses)
         {
             // public static List<Expense> ListExpenses(string category) {  }
             if (Expenses.Count == 0)
@@ -162,10 +162,17 @@ namespace ExpenseTracker
             {
                 Console.WriteLine("Utgifter: ");
                 Console.WriteLine();
-                foreach (Expense expense in Expenses)
+                foreach (Expense expense in expenses)
                 {
                     Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + 
                         "kr (" + expense.Category + ") ");
+                    
+                    Console.WriteLine("");
+                    Console.WriteLine("");
+                    Console.WriteLine("Antal utgifter: " + expenses.Count);
+                  //  Console.WriteLine("Summa: " + );
+                    Console.WriteLine("");
+                    Console.WriteLine("");
                 }
             }
         }
