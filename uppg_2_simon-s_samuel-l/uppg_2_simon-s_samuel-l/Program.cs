@@ -19,104 +19,119 @@ namespace ExpenseTracker
 
     public class Program
     {
+        // Static List to hold all expenses throughout the program
         public static List<Expense> Expenses = new List<Expense>();
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             // Write the main program code here.
-            
+
             // pris inkl moms
-            //pris exl moms
+            // pris exl moms
             // kategori + momsen på den/det
             // namn
 
-
-            int menu = ShowMenu("Vad vill du göra?", new[]
-            {
-                "Lägg till utgift",
-                "Visa alla utgifter",
-                "Visa summa per katerogi",
-                "Ändra utgift",
-                "Ta bort enskild utgift",
-                "Ta bort samtliga utgifter",
-                "Avsluta"
-            });
-            Console.Clear();
-            if (menu == 0)
-            {
-                Console.Write("Namn: ");
-                string name = Console.ReadLine();
-                Console.Write("Pris: ");
-                decimal price = decimal.Parse(Console.ReadLine());
-
-                string category = "";
-                double vat = 0.0;
-
-                int categoryChoice = ShowMenu("Kategori", new[]
+            // main-loop, ends if user chooses option 6 in mainMenu
+            while (true) 
+            { 
+                int mainMenu = ShowMenu("Vad vill du göra?", new[]
                 {
-                    "Utbildning",
-                    "Böcker,",
-                    "Livsmedel",
-                    "Övrigt"
+                    "Lägg till utgift",
+                    "Visa alla utgifter",
+                    "Visa summa per kategori",
+                    "Ändra utgift",
+                    "Ta bort enskild utgift",
+                    "Ta bort samtliga utgifter",
+                    "Avsluta"
                 });
                 Console.Clear();
-                if (categoryChoice == 0)
+
+                if (mainMenu == 0)  // 0 = add expense 
                 {
-                    category = "Utbildning";
-                    vat = GetVAT(category);
+                    AddExpense();
                 }
-                else if (categoryChoice == 1)
+                else if (mainMenu == 1) // list all expenses
                 {
-                    category = "Böcker";
-                    vat = GetVAT(category);
+                    // code here
                 }
-                else if (categoryChoice == 2)
+                else if (mainMenu == 2) // show sum per category 
                 {
-                    category = "Livsmedel";
-                    vat = GetVAT(category);
+                    // code here
                 }
-                else 
+                else if (mainMenu == 3) // edit an expense 
                 {
-                    category = "Övrigt";
-                    vat = GetVAT(category);
+                    // code here
                 }
-                Expense expense = new Expense
+                else if (mainMenu == 4) // remove an expense 
                 {
-                    Name = name,
-                    Price = price,
-                    Category = category,
-                    VAT = vat
-                };
-                Expenses.Add(expense);
-               
-            }
-            if (menu == 1)
-            {
-                // Visa alla utgifter
-            }
-            if (menu == 2)
-            {
-                //Visa summa per kategori
-            }
-            if (menu == 3)
-            {
-                // Ändra på någon utgift
-            }
-            if (menu == 4)
-            {
-                // Ta bort utgift
-            }
-            if (menu == 5)
-            {
-                //Ta bort alla utgifter
-            }
-            if (menu == 6)
-            {
-                Console.Write("Exiting program. Goodbye!");
-            }
+                    // code here
+                }
+                else if (mainMenu == 5) // remove all expenses 
+                {
+                    // code here
+                }
+                else
+                {
+                    Console.Write("Exiting program. Goodbye!");
+                    break; // breaks main-loop 
+                }
+            } // <-- end of main-loop 
         }
+
+        public static void AddExpense()
+        {
+            Console.Write("Namn: ");
+            string name = Console.ReadLine();
+            Console.Write("Pris: ");
+            decimal price = decimal.Parse(Console.ReadLine());
+
+            string category = "";
+            double vat = 0.0;
+
+            int categoryChoice = ShowMenu("Kategori", new[]
+            {
+                        "Utbildning",
+                        "Böcker,",
+                        "Livsmedel",
+                        "Övrigt"
+                    });
+
+            if (categoryChoice == 0)
+            {
+                category = "Utbildning";
+                vat = GetVAT(category);
+            }
+            else if (categoryChoice == 1)
+            {
+                category = "Böcker";
+                vat = GetVAT(category);
+            }
+            else if (categoryChoice == 2)
+            {
+                category = "Livsmedel";
+                vat = GetVAT(category);
+            }
+            else
+            {
+                category = "Övrigt";
+                vat = GetVAT(category);
+            }
+
+            Expense expense = new Expense
+            {
+                Name = name,
+                Price = price,
+                Category = category,
+                VAT = vat
+            };
+            Expenses.Add(expense);
+
+            Console.Clear();
+        }
+
         public static void ListExpenses()
         {
+            // public static List<Expense> ListExpenses(string category) {  }
             if (Expenses.Count == 0)
             {
                 Console.WriteLine("Du har inte lagt till några utgifter ännu");
@@ -127,7 +142,8 @@ namespace ExpenseTracker
                 Console.WriteLine();
                 foreach (Expense expense in Expenses)
                 {
-                    Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + "kr (" + expense.Category + ") ");           
+                    Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + 
+                        "kr (" + expense.Category + ") ");
                 }
             }
         }
