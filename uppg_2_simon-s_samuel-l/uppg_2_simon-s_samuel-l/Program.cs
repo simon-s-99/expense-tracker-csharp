@@ -79,11 +79,22 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 5) // remove all expenses 
                 {
-                    // code here
+                    int subMenu = ShowMenu("Är du säker på att du vill ta bort ALLA utgifter?", new[]
+                    {
+                        "Ja",
+                        "Nej"
+                    });
+
+                    if (subMenu == 0) // removes all posts in Expenses
+                    {
+                        Expenses.Clear();
+                    }
+                    // if subMenu == 1 control falls out to main-loop again 
                 }
                 else
                 {
                     Console.Write("Exiting program. Goodbye!");
+                    Console.WriteLine();
                     break; // breaks main-loop 
                 }
             } // <-- end of main-loop 
