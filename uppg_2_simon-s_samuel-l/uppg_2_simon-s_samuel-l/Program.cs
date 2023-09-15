@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
@@ -36,7 +37,7 @@ namespace ExpenseTracker
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             // Write the main program code here.
-
+            
             // pris inkl moms
             // pris exl moms
             // kategori + momsen på den/det
@@ -63,11 +64,45 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 1) // list all expenses
                 {
-                    ListExpenses();
+                    ListExpenses(Expenses);
                 }
                 else if (mainMenu == 2) // show sum per category 
                 {
-                    // code here
+                    List<Expense> foodList = new List<Expense>();
+                    List<Expense> educationList = new List<Expense>();
+                    List<Expense> booksList = new List<Expense>();
+                    List<Expense> otherList = new List<Expense>();
+                    
+                    foreach (Expense expense in Expenses)
+                    {
+                        if (expense.Category == "Livsmedel")
+                        {
+                            foodList.Add(expense);
+                        }
+                        else if (expense.Category == "Utbildning")
+                        {
+                            educationList.Add(expense);
+                        }
+                        else if (expense.Category == "Böcker")
+                        {
+                            booksList.Add(expense);
+                        }
+                        else
+                        {
+                            otherList.Add(expense);
+                        }    
+                    }
+                    Console.WriteLine("Summa per Kategori: ");
+                    Console.WriteLine("");
+                    Console.WriteLine("Utbildning: "+ SumExpenses(educationList, false).ToString("0.00")
+                        + "kr (" + SumExpenses(educationList, true).ToString("0.00") + " kr exkl. moms)" );
+                    Console.WriteLine("Böcker: " + SumExpenses(booksList, false).ToString("0.00")
+                        + "kr (" + SumExpenses(booksList, true).ToString("0.00") + " kr exkl. moms)");
+                    Console.WriteLine("Livsmedel: " + SumExpenses(foodList, false).ToString("0.00")
+                        + "kr (" + SumExpenses(foodList, true).ToString("0.00") + " kr exkl. moms)");
+                    Console.WriteLine("Övrigt: " + SumExpenses(otherList, false).ToString("0.00")
+                        + "kr (" + SumExpenses(otherList, true).ToString("0.00") + " kr exkl. moms)");
+                    Console.WriteLine("");
                 }
                 else if (mainMenu == 3) // edit an expense 
                 {
@@ -166,16 +201,16 @@ namespace ExpenseTracker
                 {
                     Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + 
                         "kr (" + expense.Category + ") ");
-                    
-                    Console.WriteLine("");
-                    Console.WriteLine("");
-                    Console.WriteLine("Antal utgifter: " + expenses.Count);
-                  //  Console.WriteLine("Summa: " + );
-                    Console.WriteLine("");
-                    Console.WriteLine("");
                 }
+                decimal price = SumExpenses(expenses, false);
+                decimal priceVat = SumExpenses(expenses, true);
+                Console.WriteLine("");
+                Console.WriteLine("Antal utgifter: " + expenses.Count);
+                Console.WriteLine("Summa: " + price.ToString("0.00") + " kr (" + priceVat.ToString("0.00") + " kr exkl. moms)");
+                    Console.WriteLine("");
             }
         }
+        
 
 
         // Return the sum of all expenses in the specified list, with or without VAT based on the
