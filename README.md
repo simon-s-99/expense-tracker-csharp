@@ -1,3 +1,6 @@
 # c-sharp_uppg2_repo
-Private repo for school collabs at TeknikHögskolan .NET | hosted by Simon S.
 Inlämningsuppgift nr. 2
+by Simon Sörqvist & Samuel Lööf
+
+Private repo for collab on assignment 2 
+at Teknikhögskolan .NET HT23
