@@ -14,6 +14,27 @@ using System.Linq;
  * 
  * Removed unnecessary comments? i.e. Jakobs instruktioner?
  * Are there any rounding errors ? 
+ * 
+ * Maybe change strings from
+ * "hello" + variable + "there"
+ * to
+ * $"hello {variable} there" 
+ */
+
+/*
+ * Rewrite GetVAT() to a dictionary with enums(categories) as keys
+ * and decimal(VAT) as values 
+ * 
+            enum categoryEnum { Education, Books, Food, Other }
+
+            Dictionary<categoryEnum, decimal> categoryVAT = new Dictionary<categoryEnum, decimal>();
+            categoryVAT.Add(categoryEnum.Education, 0.00m);
+            categoryVAT.Add(categoryEnum.Books, 0.06m);
+
+            decimal eduVAT = categoryVAT[categoryEnum.Education];
+            decimal bookVAT = categoryVAT[categoryEnum.Books];
+
+            Console.WriteLine($"Edu is = {eduVAT} | Book is = {bookVAT}");
  */
 
 namespace ExpenseTracker
