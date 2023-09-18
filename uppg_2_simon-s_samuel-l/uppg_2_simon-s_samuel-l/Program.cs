@@ -283,7 +283,7 @@ namespace ExpenseTracker
             {
                 if (includeVAT)
                 {
-                    sum += expense.Price * (1 - GetVAT(expense.Category));
+                    sum += expense.Price / (1 + GetVAT(expense.Category));
                 }
                 else
                 {
