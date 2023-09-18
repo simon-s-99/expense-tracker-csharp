@@ -127,11 +127,48 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 3) // edit an expense 
                 {
-                    // code here
+                 if  (Expenses.Count == 0)
+                    {
+                        Console.WriteLine("Det finns inga utgifter att redigera");
+                    }
+                    else 
+                    {
+                        string[] expenseInfo = new string[Expenses.Count];
+                        for (int i = 0; i < Expenses.Count; i++ )
+                        {
+                            expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
+                        }
+                        
+
+
+
+                        ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+
+                    }
+                              
+
                 }
                 else if (mainMenu == 4) // remove an expense 
                 {
-                    // code here
+                    if (Expenses.Count == 0)
+                    {
+                        Console.WriteLine("Det finns inga utgifter att ta bort.");
+                    }
+                    else
+                    {
+                        string[] expenseInfo = new string[Expenses.Count];
+                        for (int i = 0; i < Expenses.Count; i++)
+                        {
+                            expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
+                        }
+
+
+
+
+                        ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+
+                    }
+
                 }
                 else if (mainMenu == 5) // remove all expenses 
                 {
