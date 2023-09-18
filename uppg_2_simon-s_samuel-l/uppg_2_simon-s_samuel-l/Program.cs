@@ -167,6 +167,7 @@ namespace ExpenseTracker
                     if (subMenu == 0) // removes all posts in Expenses
                     {
                         Expenses.Clear();
+                        Console.Clear();
                         Console.WriteLine("Samtliga utgifter har tagits bort.");
                         Console.WriteLine();
                     }
