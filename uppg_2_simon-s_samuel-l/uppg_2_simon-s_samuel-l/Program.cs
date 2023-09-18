@@ -1,7 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -13,28 +15,18 @@ using System.Linq;
  * Check before turning in: 
  * 
  * Removed unnecessary comments? i.e. Jakobs instruktioner?
- * Are there any rounding errors ? 
- * 
- * Maybe change strings from
- * "hello" + variable + "there"
- * to
- * $"hello {variable} there" 
+ * Write tests for sumexpenses 
  */
 
 /*
- * Rewrite GetVAT() to a dictionary with enums(categories) as keys
- * and decimal(VAT) as values 
+ * Lägg till typ detta när användaren ändrar en utgift :
  * 
-            enum categoryEnum { Education, Books, Food, Other }
+ * [användaren väljer "päron"]
 
-            Dictionary<categoryEnum, decimal> categoryVAT = new Dictionary<categoryEnum, decimal>();
-            categoryVAT.Add(categoryEnum.Education, 0.00m);
-            categoryVAT.Add(categoryEnum.Books, 0.06m);
-
-            decimal eduVAT = categoryVAT[categoryEnum.Education];
-            decimal bookVAT = categoryVAT[categoryEnum.Books];
-
-            Console.WriteLine($"Edu is = {eduVAT} | Book is = {bookVAT}");
+    Vad vill du ändra?
+    - Namn
+    - Pris
+    - Kategori
  */
 
 namespace ExpenseTracker
@@ -45,28 +37,33 @@ namespace ExpenseTracker
         public string Name;
         public string Category;
         public decimal Price;
-        public decimal VAT;
-        public decimal PriceWithoutVAT; // is this needed ? 
-                                    // made redundant by GetVAT() ? 
     }
 
     public class Program
     {
         // Static List to hold all expenses throughout the program
         public static List<Expense> Expenses = new List<Expense>();
+
+        // Static dictionary to hold values related to their respective VAT 
+        static Dictionary<string, decimal> CategoryVAT = new Dictionary<string, decimal>();
+
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             // Write the main program code here.
-            
-            // pris inkl moms
-            // pris exl moms
-            // kategori + momsen på den/det
-            // namn
+
+            CategoryVAT.Add("Utbildning", 0.00m);
+            CategoryVAT.Add("Böcker", 0.06m);
+            CategoryVAT.Add("Livsmedel", 0.12m);
+            CategoryVAT.Add("Övrigt", 0.25m);
+
+            // welcome message, runs once on start 
+            Console.WriteLine("Välkommen!");
+            Console.WriteLine();
 
             // main-loop, ends if user chooses option 6 in mainMenu
             while (true) 
-            { 
+            {
                 int mainMenu = ShowMenu("Vad vill du göra?", new[]
                 {
                     "Lägg till utgift",
@@ -89,45 +86,11 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 2) // show sum per category 
                 {
-                    List<Expense> foodList = new List<Expense>();
-                    List<Expense> educationList = new List<Expense>();
-                    List<Expense> booksList = new List<Expense>();
-                    List<Expense> otherList = new List<Expense>();
-                    
-                    foreach (Expense expense in Expenses)
-                    {
-                        if (expense.Category == "Livsmedel")
-                        {
-                            foodList.Add(expense);
-                        }
-                        else if (expense.Category == "Utbildning")
-                        {
-                            educationList.Add(expense);
-                        }
-                        else if (expense.Category == "Böcker")
-                        {
-                            booksList.Add(expense);
-                        }
-                        else
-                        {
-                            otherList.Add(expense);
-                        }    
-                    }
-                    Console.WriteLine("Summa per Kategori: ");
-                    Console.WriteLine("");
-                    Console.WriteLine("Utbildning: "+ SumExpenses(educationList, false).ToString("0.00")
-                        + "kr (" + SumExpenses(educationList, true).ToString("0.00") + " kr exkl. moms)" );
-                    Console.WriteLine("Böcker: " + SumExpenses(booksList, false).ToString("0.00")
-                        + "kr (" + SumExpenses(booksList, true).ToString("0.00") + " kr exkl. moms)");
-                    Console.WriteLine("Livsmedel: " + SumExpenses(foodList, false).ToString("0.00")
-                        + "kr (" + SumExpenses(foodList, true).ToString("0.00") + " kr exkl. moms)");
-                    Console.WriteLine("Övrigt: " + SumExpenses(otherList, false).ToString("0.00")
-                        + "kr (" + SumExpenses(otherList, true).ToString("0.00") + " kr exkl. moms)");
-                    Console.WriteLine("");
+                    ShowSumPerCategory();
                 }
                 else if (mainMenu == 3) // edit an expense 
                 {
-                 if  (Expenses.Count == 0)
+                    if  (Expenses.Count == 0)
                     {
                         Console.WriteLine("Det finns inga utgifter att redigera");
                     }
@@ -139,14 +102,21 @@ namespace ExpenseTracker
                             expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
                         }
                         
+                        int editMenu = ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
 
+                        Console.Clear();
 
+                        Console.WriteLine($"Du redigerar: {expenseInfo[editMenu]}");
+                        Console.WriteLine();
 
-                        ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+                        AddExpense();
+                        Expenses.RemoveAt(editMenu);
 
+                        Console.WriteLine("Utgiften " +
+                            $"{expenseInfo[editMenu].Substring(0, expenseInfo[editMenu].IndexOf(':'))}" +
+                            " har ändrats.");
                     }
-                              
-
+                    Console.Clear();
                 }
                 else if (mainMenu == 4) // remove an expense 
                 {
@@ -162,13 +132,29 @@ namespace ExpenseTracker
                             expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
                         }
 
+                        int removeMenu = ShowMenu("Välj utgift att ta bort:", expenseInfo);
 
+                        Console.Clear();
 
+                        int sureMenu = ShowMenu("Är du säker?", new[]
+                        {
+                            "Ja",
+                            "Nej"
+                        });
 
-                        ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+                        if (sureMenu == 0)
+                        {
+                            Expenses.RemoveAt(removeMenu);
+                        }
+                        // else = returns to main-loop
 
+                        Console.Clear();
+
+                        Console.WriteLine("Utgiften " + 
+                            $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
+                            " har tagits bort.");
+                        Console.WriteLine();
                     }
-
                 }
                 else if (mainMenu == 5) // remove all expenses 
                 {
@@ -181,12 +167,14 @@ namespace ExpenseTracker
                     if (subMenu == 0) // removes all posts in Expenses
                     {
                         Expenses.Clear();
+                        Console.WriteLine("Samtliga utgifter har tagits bort.");
+                        Console.WriteLine();
                     }
                     // if subMenu == 1 control falls out to main-loop again 
                 }
                 else
                 {
-                    Console.Write("Exiting program. Goodbye!");
+                    Console.Write("Avslutar programmet, hejdå!");
                     Console.WriteLine();
                     break; // breaks main-loop 
                 }
@@ -206,7 +194,7 @@ namespace ExpenseTracker
             int categoryChoice = ShowMenu("Kategori", new[]
             {
                         "Utbildning",
-                        "Böcker,",
+                        "Böcker",
                         "Livsmedel",
                         "Övrigt"
             });
@@ -214,22 +202,22 @@ namespace ExpenseTracker
             if (categoryChoice == 0)
             {
                 category = "Utbildning";
-                vat = GetVAT(category);
+                vat = CategoryVAT[category];
             }
             else if (categoryChoice == 1)
             {
                 category = "Böcker";
-                vat = GetVAT(category);
+                vat = CategoryVAT[category];
             }
             else if (categoryChoice == 2)
             {
                 category = "Livsmedel";
-                vat = GetVAT(category);
+                vat = CategoryVAT[category];
             }
             else
             {
                 category = "Övrigt";
-                vat = GetVAT(category);
+                vat = CategoryVAT[category];
             }
 
             Expense expense = new Expense
@@ -237,11 +225,14 @@ namespace ExpenseTracker
                 Name = name,
                 Price = price,
                 Category = category,
-                VAT = vat
             };
+
             Expenses.Add(expense);
 
             Console.Clear();
+
+            Console.WriteLine("Utgift tillagd/redigerad.");
+            Console.WriteLine();
         }
 
         public static void ListExpenses(List<Expense> expenses)
@@ -260,8 +251,8 @@ namespace ExpenseTracker
                     Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + 
                         "kr (" + expense.Category + ") ");
                 }
-                decimal price = SumExpenses(expenses, false);
-                decimal priceVat = SumExpenses(expenses, true);
+                decimal price = SumExpenses(expenses, true);
+                decimal priceVat = SumExpenses(expenses, false);
                 Console.WriteLine("");
                 Console.WriteLine("Antal utgifter: " + expenses.Count);
                 Console.WriteLine("Summa: " + price.ToString("0.00") + " kr (" + priceVat.ToString("0.00") + " kr exkl. moms)");
@@ -269,7 +260,49 @@ namespace ExpenseTracker
             }
         }
         
+        public static void ShowSumPerCategory()
+        {
+            List<Expense> foodList = new List<Expense>();
+            List<Expense> educationList = new List<Expense>();
+            List<Expense> booksList = new List<Expense>();
+            List<Expense> otherList = new List<Expense>();
 
+            foreach (Expense expense in Expenses)
+            {
+                if (expense.Category == "Livsmedel")
+                {
+                    foodList.Add(expense);
+                }
+                else if (expense.Category == "Utbildning")
+                {
+                    educationList.Add(expense);
+                }
+                else if (expense.Category == "Böcker")
+                {
+                    booksList.Add(expense);
+                }
+                else
+                {
+                    otherList.Add(expense);
+                }
+            }
+            Console.WriteLine("Summa per Kategori: ");
+            Console.WriteLine("");
+
+            Console.WriteLine($"Utbildning: {SumExpenses(educationList, true).ToString("0.00")} kr " +
+                $"({SumExpenses(educationList, false).ToString("0.00")} kr exkl. moms)");
+
+            Console.WriteLine($"Böcker: {SumExpenses(booksList, true).ToString("0.00")} kr " +
+                $"({SumExpenses(booksList, false).ToString("0.00")} kr exkl. moms)");
+
+            Console.WriteLine($"Livsmedel: {SumExpenses(foodList, true).ToString("0.00")} kr " +
+                $"({SumExpenses(foodList, false).ToString("0.00")} kr exkl. moms)");
+
+            Console.WriteLine($"Övrigt: {SumExpenses(otherList, true).ToString("0.00")} kr " +
+                $"({SumExpenses(otherList, false).ToString("0.00")} kr exkl. moms)");
+
+            Console.WriteLine("");
+        }
 
         // Return the sum of all expenses in the specified list, with or without VAT based on the
         // second parameter. This method *must* be in the program and *must* be used in
@@ -283,44 +316,19 @@ namespace ExpenseTracker
             {
                 if (includeVAT)
                 {
+<<<<<<< HEAD
                     sum += expense.Price / (1 + GetVAT(expense.Category));
+=======
+                    sum += expense.Price;
+>>>>>>> main
                 }
                 else
                 {
-                    sum += expense.Price;
+                    sum += expense.Price / (1 + CategoryVAT[expense.Category]);
                 }
             }
 
             return sum;
-        }
-
-        // method to get VAT associated with category
-        public static decimal GetVAT(string category)
-        {
-            decimal rValue = 0.0m;
-            switch (category)
-            {
-                case "Utbildning":
-                    // Change nothing since rValue is already 0 
-                    break;
-
-                case "Böcker":
-                    rValue = 0.06m; // books = 6% VAT
-                    break;
-
-                case "Livsmedel":
-                    rValue = 0.12m; // food = 12% VAT
-                    break;
-
-                case "Övrigt":
-                    rValue = 0.25m; // other = 25% VAT
-                    break;
-
-                default:
-                    // Handles incorrect input, mainly for testing 
-                    break;
-            }
-            return rValue; 
         }
 
         // Do not change this method.
@@ -422,50 +430,6 @@ namespace ExpenseTracker
         public void SumExpensesTest3()
         {
             // Write code here to test the SumExpenses method.
-        }
-
-        [TestMethod]
-        public void GetVATEducation()
-        {
-            string testInput = "Utbildning";
-            decimal expected = 0.0m;
-            decimal result = Program.GetVAT(testInput);
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestMethod]
-        public void GetVATBooks()
-        {
-            string testInput = "Böcker";
-            decimal expected = 0.06m;
-            decimal result = Program.GetVAT(testInput);
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestMethod]
-        public void GetVATFood()
-        {
-            string testInput = "Livsmedel";
-            decimal expected = 0.12m;
-            decimal result = Program.GetVAT(testInput);
-            Assert.AreEqual(expected, result);
-        }
-
-        [TestMethod]
-        public void GetVATOther()
-        {
-            string testInput = "Övrigt";
-            decimal expected = 0.25m;
-            decimal result = Program.GetVAT(testInput);
-            Assert.AreEqual(expected, result);
-        }
-        [TestMethod]
-        public void GetVATEmptyParameter()
-        {
-            string testInput = "";
-            decimal expected = 0.0m;
-            decimal result = Program.GetVAT(testInput);
-            Assert.AreEqual(expected, result);
         }
     }
 }
