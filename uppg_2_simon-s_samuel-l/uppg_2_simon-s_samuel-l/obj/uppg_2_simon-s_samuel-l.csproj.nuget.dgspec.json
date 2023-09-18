@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj": {}
+    "D:\\GitHub_Repos\\TH_HT23_Assignments_collab\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj": {}
   },
   "projects": {
-    "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj": {
+    "D:\\GitHub_Repos\\TH_HT23_Assignments_collab\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
+        "projectUniqueName": "D:\\GitHub_Repos\\TH_HT23_Assignments_collab\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
         "projectName": "uppg_2_simon-s_samuel-l",
-        "projectPath": "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
+        "projectPath": "D:\\GitHub_Repos\\TH_HT23_Assignments_collab\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l.csproj",
         "packagesPath": "C:\\Users\\simon\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\simon\\source\\github_school_collabs\\th_dotNet_ht23_collab\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\obj\\",
+        "outputPath": "D:\\GitHub_Repos\\TH_HT23_Assignments_collab\\c-sharp_uppg2_repo\\uppg_2_simon-s_samuel-l\\uppg_2_simon-s_samuel-l\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\simon\\AppData\\Roaming\\NuGet\\NuGet.Config",
