@@ -316,11 +316,7 @@ namespace ExpenseTracker
             {
                 if (includeVAT)
                 {
-<<<<<<< HEAD
-                    sum += expense.Price / (1 + GetVAT(expense.Category));
-=======
                     sum += expense.Price;
->>>>>>> main
                 }
                 else
                 {
