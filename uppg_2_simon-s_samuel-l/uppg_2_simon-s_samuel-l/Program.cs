@@ -18,17 +18,6 @@ using System.Linq;
  * Write tests for sumexpenses 
  */
 
-/*
- * Lägg till typ detta när användaren ändrar en utgift :
- * 
- * [användaren väljer "päron"]
-
-    Vad vill du ändra?
-    - Namn
-    - Pris
-    - Kategori
- */
-
 namespace ExpenseTracker
 {
     public class Expense
@@ -62,7 +51,7 @@ namespace ExpenseTracker
             Console.WriteLine();
 
             // main-loop, ends if user chooses option 6 in mainMenu
-            while (true) 
+            while (true)
             {
                 int mainMenu = ShowMenu("Vad vill du göra?", new[]
                 {
@@ -90,56 +79,7 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 3) // edit an expense 
                 {
-                    if  (Expenses.Count == 0)
-                    {
-                        Console.WriteLine("Det finns inga utgifter att redigera");
-                    }
-                    else 
-                    {
-                        string[] expenseInfo = new string[Expenses.Count];
-                        for (int i = 0; i < Expenses.Count; i++ )
-                        {
-                            expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
-                        }
-                        
-                        // choose which post to edit
-                        int whichToEditMenu = ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
-
-                        
-
-                        // from behöver felsökas, fattar ingenting 
-
-                        string chosenExpenseName = expenseInfo[whichToEditMenu].Substring(0, expenseInfo[whichToEditMenu].IndexOf(':'));
-                        // finds the post you want to edit based on it's name 
-                        var edit = from target in Expenses
-                                   where target.Name == chosenExpenseName
-                                   select target;
-
-                        Console.Clear();
-
-                        // choose what to edit in the post
-                        int editMenu = ShowMenu($"Vad vill du redigera i {expenseInfo[whichToEditMenu]}?", new[]
-                        {
-                            "Namn",
-                            "Kategori",
-                            "Pris"
-                        });
-
-                        Console.WriteLine();
-
-                        if (editMenu == 1)
-                        {
-                            
-                        }
-
-                        AddExpense();
-                        Expenses.RemoveAt(whichToEditMenu);
-
-                        Console.WriteLine("Utgiften " +
-                            $"{chosenExpenseName}" +
-                            " har ändrats.");
-                    }
-                    Console.Clear();
+                    EditExpense();
                 }
                 else if (mainMenu == 4) // remove an expense 
                 {
@@ -171,7 +111,7 @@ namespace ExpenseTracker
                         if (sureMenu == 0)
                         {
                             Expenses.RemoveAt(removeMenu);
-                            Console.WriteLine("Utgiften " + 
+                            Console.WriteLine("Utgiften " +
                                 $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
                                 " har tagits bort.");
                         }
@@ -276,7 +216,7 @@ namespace ExpenseTracker
                 Console.WriteLine();
                 foreach (Expense expense in expenses)
                 {
-                    Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") + 
+                    Console.WriteLine(expense.Name + ": " + expense.Price.ToString("0.00") +
                         "kr (" + expense.Category + ") ");
                 }
                 decimal price = SumExpenses(expenses, true);
@@ -284,10 +224,10 @@ namespace ExpenseTracker
                 Console.WriteLine("");
                 Console.WriteLine("Antal utgifter: " + expenses.Count);
                 Console.WriteLine("Summa: " + price.ToString("0.00") + " kr (" + priceVat.ToString("0.00") + " kr exkl. moms)");
-                    Console.WriteLine("");
+                Console.WriteLine("");
             }
         }
-        
+
         public static void ShowSumPerCategory()
         {
             List<Expense> foodList = new List<Expense>();
@@ -330,6 +270,99 @@ namespace ExpenseTracker
                 $"({SumExpenses(otherList, false).ToString("0.00")} kr exkl. moms)");
 
             Console.WriteLine("");
+        }
+
+        public static void EditExpense()
+        {
+            if (Expenses.Count == 0)
+            {
+                Console.WriteLine("Det finns inga utgifter att redigera");
+            }
+            else
+            {
+                string[] expenseInfo = new string[Expenses.Count];
+                for (int i = 0; i < Expenses.Count; i++)
+                {
+                    expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
+                }
+
+                // choose which post to edit
+                int whichToEditMenu = ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+                string chosenExpenseName = expenseInfo[whichToEditMenu].Substring(0, expenseInfo[whichToEditMenu].IndexOf(':'));
+
+                Console.Clear();
+
+                // choose what to edit in the post
+                int editMenu = ShowMenu($"Vad vill du redigera i {chosenExpenseName}?", new[]
+                {
+                            "Namn",
+                            "Kategori",
+                            "Pris",
+                            "Avbryt och återgå till huvudmenyn"
+                        });
+
+                Console.WriteLine();
+
+                string name = Expenses[whichToEditMenu].Name;
+                string category = Expenses[whichToEditMenu].Category;
+                decimal price = Expenses[whichToEditMenu].Price;
+
+                if (editMenu == 0)
+                {
+                    Console.Write("Namn: ");
+                    name = Console.ReadLine();
+                }
+                else if (editMenu == 1)
+                {
+                    int editCategoryMenu = ShowMenu($"Vilken kategori ska {chosenExpenseName} tillhöra?", new[]
+                    {
+                        "Utbildning",
+                        "Böcker",
+                        "Livsmedel",
+                        "Övrigt"
+                    });
+
+                    switch (editCategoryMenu)
+                    {
+                        case 0:
+                            category = "Utbildning";
+                            break;
+                        case 1:
+                            category = "Böcker";
+                            break;
+                        case 2:
+                            category = "Livsmedel";
+                            break;
+                        default:
+                            category = "Övrigt";
+                            break;
+                    }
+                }
+                else if (editMenu == 2)
+                {
+                    Console.Write("Pris: ");
+                    price = decimal.Parse(Console.ReadLine());
+                }
+                else // returns if user enters "abort" 
+                {
+                    Console.Clear();
+                    return; // this works because its a method :) 
+                }
+
+                Expense expense = new();
+                expense.Name = name;
+                expense.Category = category;
+                expense.Price = price;
+
+                // removes the post you wish to edit
+                Expenses.RemoveAt(whichToEditMenu);
+
+                Expenses.Insert(whichToEditMenu, expense);
+
+                Console.Clear();
+                Console.WriteLine($"Utgiften {chosenExpenseName} har ändrats.");
+                Console.WriteLine();
+            }
         }
 
         // Return the sum of all expenses in the specified list, with or without VAT based on the
