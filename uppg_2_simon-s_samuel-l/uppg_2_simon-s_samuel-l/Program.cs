@@ -441,6 +441,22 @@ namespace ExpenseTracker
         [TestMethod]
         public void SumExpensesTest1()
         {
+            List<Expense> expenses = new List<Expense>
+            {
+                new Expense { Name = "Kebab", Category = "Livsmedel", Price = 100.0m },
+                new Expense { Name = "Dassbok", Category = "Böcker", Price = 80.0m },
+                new Expense { Name = "PT utbildning", Category = "Utbildning", Price = 10000.0m }
+            };
+            decimal sumWithVAT = Program.SumExpenses(expenses, true);
+            decimal sumWithoutVAT = Program.SumExpenses(expenses, false);
+
+            // Assert
+            Assert.AreEqual(60.0m, sumWithVAT); // Ensure the sum with VAT is as expected.
+            Assert.AreEqual(50.0m, sumWithoutVAT); // Ensure the sum without VAT is as expected.
+            
+            
+            
+            
             // Write code here to test the SumExpenses method.
         }
 
