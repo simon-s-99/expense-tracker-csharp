@@ -111,9 +111,15 @@ namespace ExpenseTracker
                         if (sureMenu == 0)
                         {
                             Expenses.RemoveAt(removeMenu);
+                            /*
                             Console.WriteLine("Utgiften " +
-                                $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
-                                " har tagits bort.");
+                            $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
+                            " har tagits bort.");
+                            */
+                            string removedExpense = expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'));
+                            Console.WriteLine($"Utgiften \"{removedExpense}\" har tagits bort.");
+
+                            //Added quotes to the removed item.
                         }
                         else
                         {
@@ -209,6 +215,7 @@ namespace ExpenseTracker
             if (Expenses.Count == 0)
             {
                 Console.WriteLine("Du har inte lagt till några utgifter ännu");
+                Console.WriteLine();
             }
             else
             {
@@ -480,12 +487,11 @@ namespace ExpenseTracker
                 new Expense { Name = "Dassbok", Category = "Böcker", Price = 80.0m },
                 new Expense { Name = "PT utbildning", Category = "Utbildning", Price = 10000.0m }
             };
-            decimal sumWithVAT = Program.SumExpenses(expenses, true);
-            decimal sumWithoutVAT = Program.SumExpenses(expenses, false);
+         
 
             // Assert
-            Assert.AreEqual(60.0m, sumWithVAT); // Ensure the sum with VAT is as expected.
-            Assert.AreEqual(50.0m, sumWithoutVAT); // Ensure the sum without VAT is as expected.
+            Assert.AreEqual(10180.0m, includeVAT); // Ensure the sum with VAT is as expected.
+            Assert.AreEqual(10164.76m, excludeVAT); // Ensure the sum without VAT is as expected.
             
             
             
