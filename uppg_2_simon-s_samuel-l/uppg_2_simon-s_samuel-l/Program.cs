@@ -102,18 +102,41 @@ namespace ExpenseTracker
                             expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
                         }
                         
-                        int editMenu = ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+                        // choose which post to edit
+                        int whichToEditMenu = ShowMenu("Vilken utgift vill du redigera?", expenseInfo);
+
+                        
+
+                        // from behöver felsökas, fattar ingenting 
+
+                        string chosenExpenseName = expenseInfo[whichToEditMenu].Substring(0, expenseInfo[whichToEditMenu].IndexOf(':'));
+                        // finds the post you want to edit based on it's name 
+                        var edit = from target in Expenses
+                                   where target.Name == chosenExpenseName
+                                   select target;
 
                         Console.Clear();
 
-                        Console.WriteLine($"Du redigerar: {expenseInfo[editMenu]}");
+                        // choose what to edit in the post
+                        int editMenu = ShowMenu($"Vad vill du redigera i {expenseInfo[whichToEditMenu]}?", new[]
+                        {
+                            "Namn",
+                            "Kategori",
+                            "Pris"
+                        });
+
                         Console.WriteLine();
 
+                        if (editMenu == 1)
+                        {
+                            
+                        }
+
                         AddExpense();
-                        Expenses.RemoveAt(editMenu);
+                        Expenses.RemoveAt(whichToEditMenu);
 
                         Console.WriteLine("Utgiften " +
-                            $"{expenseInfo[editMenu].Substring(0, expenseInfo[editMenu].IndexOf(':'))}" +
+                            $"{chosenExpenseName}" +
                             " har ändrats.");
                     }
                     Console.Clear();
@@ -142,17 +165,21 @@ namespace ExpenseTracker
                             "Nej"
                         });
 
+                        Console.Clear();
+
+                        // remove expense 
                         if (sureMenu == 0)
                         {
                             Expenses.RemoveAt(removeMenu);
+                            Console.WriteLine("Utgiften " + 
+                                $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
+                                " har tagits bort.");
                         }
-                        // else = returns to main-loop
+                        else
+                        {
+                            Console.WriteLine("Utgiften har INTE tagits bort.");
+                        }
 
-                        Console.Clear();
-
-                        Console.WriteLine("Utgiften " + 
-                            $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
-                            " har tagits bort.");
                         Console.WriteLine();
                     }
                 }
