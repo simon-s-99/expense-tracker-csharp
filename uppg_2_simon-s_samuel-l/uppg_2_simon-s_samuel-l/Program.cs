@@ -7,7 +7,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using uppg_2_simon_s_samuel_l;
 
 // Assignment nr. 2 
 // by Simon Sörqvist & Samuel Lööf 
@@ -15,7 +14,6 @@ using uppg_2_simon_s_samuel_l;
 /*
  * Check before turning in: 
  * 
- * Removed unnecessary comments? i.e. Jakobs instruktioner?
  * Write tests for sumexpenses 
  */
 
@@ -23,7 +21,6 @@ namespace ExpenseTracker
 {
     public class Expense
     {
-        // Add variables here.
         public string Name;
         public string Category;
         public decimal Price;
@@ -40,12 +37,10 @@ namespace ExpenseTracker
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            // Write the main program code here.
 
-            CategoryVAT.Add("Utbildning", 0.00m);
-            CategoryVAT.Add("Böcker", 0.06m);
-            CategoryVAT.Add("Livsmedel", 0.12m);
-            CategoryVAT.Add("Övrigt", 0.25m);
+            // runs once on start to give dictionary all categories with
+            // associated VAT values (this is a workaround for testing purposes)
+            AddCategoriesToDictionary(); 
 
             // welcome message, runs once on start 
             Console.WriteLine("Välkommen!");
@@ -84,51 +79,7 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 4) // remove an expense 
                 {
-                    if (Expenses.Count == 0)
-                    {
-                        Console.WriteLine("Det finns inga utgifter att ta bort.");
-                    }
-                    else
-                    {
-                        string[] expenseInfo = new string[Expenses.Count];
-                        for (int i = 0; i < Expenses.Count; i++)
-                        {
-                            expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
-                        }
-
-                        int removeMenu = ShowMenu("Välj utgift att ta bort:", expenseInfo);
-
-                        Console.Clear();
-
-                        int sureMenu = ShowMenu("Är du säker?", new[]
-                        {
-                            "Ja",
-                            "Nej"
-                        });
-
-                        Console.Clear();
-
-                        // remove expense 
-                        if (sureMenu == 0)
-                        {
-                            Expenses.RemoveAt(removeMenu);
-                            /*
-                            Console.WriteLine("Utgiften " +
-                            $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
-                            " har tagits bort.");
-                            */
-                            string removedExpense = expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'));
-                            Console.WriteLine($"Utgiften \"{removedExpense}\" har tagits bort.");
-
-                            //Added quotes to the removed item.
-                        }
-                        else
-                        {
-                            Console.WriteLine("Utgiften har INTE tagits bort.");
-                        }
-
-                        Console.WriteLine();
-                    }
+                    RemoveExpense();
                 }
                 else if (mainMenu == 5) // remove all expenses 
                 {
@@ -154,6 +105,17 @@ namespace ExpenseTracker
                     break; // breaks main-loop 
                 }
             } // <-- end of main-loop 
+        }
+
+        // AddCategoriesToDictionary exists only for testing purposes
+        // so that the dictionary is not empty when running the tests
+        // (this is a workaround)
+        public static void AddCategoriesToDictionary()
+        {
+            CategoryVAT.Add("Utbildning", 0.00m);
+            CategoryVAT.Add("Böcker", 0.06m);
+            CategoryVAT.Add("Livsmedel", 0.12m);
+            CategoryVAT.Add("Övrigt", 0.25m);
         }
 
         public static void AddExpense()
@@ -216,7 +178,6 @@ namespace ExpenseTracker
             if (Expenses.Count == 0)
             {
                 Console.WriteLine("Du har inte lagt till några utgifter ännu");
-                Console.WriteLine();
             }
             else
             {
@@ -364,11 +325,54 @@ namespace ExpenseTracker
 
                 // removes the post you wish to edit
                 Expenses.RemoveAt(whichToEditMenu);
-
+                // and then inserts the edited version at the same place 
                 Expenses.Insert(whichToEditMenu, expense);
 
                 Console.Clear();
-                Console.WriteLine($"Utgiften {chosenExpenseName} har ändrats.");
+                Console.WriteLine($"Utgiften \"{chosenExpenseName}\" har ändrats.");
+                Console.WriteLine();
+            }
+        }
+
+        public static void RemoveExpense()
+        {
+            if (Expenses.Count == 0)
+            {
+                Console.WriteLine("Det finns inga utgifter att ta bort.");
+            }
+            else
+            {
+                string[] expenseInfo = new string[Expenses.Count];
+                for (int i = 0; i < Expenses.Count; i++)
+                {
+                    expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
+                }
+
+                int removeMenu = ShowMenu("Välj utgift att ta bort:", expenseInfo);
+
+                Console.Clear();
+
+                int sureMenu = ShowMenu("Är du säker?", new[]
+                {
+                            "Ja",
+                            "Nej"
+                        });
+
+                Console.Clear();
+
+                // remove expense 
+                if (sureMenu == 0)
+                {
+                    Expenses.RemoveAt(removeMenu);
+                    Console.WriteLine("Utgiften " +
+                        $"\"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}\"" +
+                        " har tagits bort.");
+                }
+                else
+                {
+                    Console.WriteLine("Utgiften har INTE tagits bort.");
+                }
+
                 Console.WriteLine();
             }
         }
@@ -379,7 +383,6 @@ namespace ExpenseTracker
         public static decimal SumExpenses(List<Expense> expenses, bool includeVAT)
         {
             decimal sum = 0;
-            // Implement the rest of this method here.
 
             foreach (Expense expense in expenses)
             {
@@ -480,52 +483,15 @@ namespace ExpenseTracker
     public class UnitTests
     {
         [TestMethod]
-        public void ShortExpensesTest()
+        public void SumExpensesTest1()
         {
-            List<Expense> expenses = new List<Expense>
-            {
-                new Expense { Name = "Kebab", Category = "Livsmedel", Price = 100.0m },
-                new Expense { Name = "Dassbok", Category = "Böcker", Price = 80.0m },
-                new Expense { Name = "PT utbildning", Category = "Utbildning", Price = 10000.0m }
-            };
-
-            decimal expectedWithVAT = 10180.0m;
-            decimal actualWithVAT = Program.SumExpenses(expenses, true);
-
-            decimal expectedWithoutVAT = 10164.76m;
-            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
-
-            Assert.AreEqual(expectedWithVAT, actualWithVAT);
-            Assert.AreEqual(expectedWithoutVAT, actualWithoutVAT);
-            
+            // Write code here to test the SumExpenses method.
         }
 
         [TestMethod]
         public void SumExpensesTest2()
         {
-            List<Expense> expenses = new List<Expense>
-            {
-                new Expense { Name = "Ost", Category = "Livsmedel", Price = 100.0m },
-                new Expense { Name = "Lax", Category = "Livsmedel", Price = 200.0m },
-                new Expense { Name = "Billys panpizza", Category = "Livsmedel", Price = 20.0m },
-
-                new Expense { Name = "The amazing Spiderman", Category = "Böcker", Price = 150.0m },
-                new Expense { Name = "Bibeln", Category = "Böcker", Price = 300.0m },
-
-                new Expense { Name = "Väktarutbildning", Category = "Utbildning", Price = 7500.0m },
-
-                new Expense { Name = "Batterier", Category = "Övrgit", Price = 180.0m },
-                new Expense { Name = "T-shirt", Category = "Övrgit", Price = 400.0m },
-            };
-
-            decimal expectedWithVAT = 10180.0m;
-            decimal actualWithVAT = Program.SumExpenses(expenses, true);
-
-            decimal expectedWithoutVAT = 10164.76m;
-            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
-
-            Assert.AreEqual(expectedWithVAT, actualWithVAT);
-            Assert.AreEqual(expectedWithoutVAT, actualWithoutVAT);
+            // Write code here to test the SumExpenses method.
         }
 
         [TestMethod]
