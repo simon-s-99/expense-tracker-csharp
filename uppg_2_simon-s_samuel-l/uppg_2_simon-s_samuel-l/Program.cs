@@ -7,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using uppg_2_simon_s_samuel_l;
 
 // Assignment nr. 2 
 // by Simon Sörqvist & Samuel Lööf 
@@ -479,7 +480,7 @@ namespace ExpenseTracker
     public class UnitTests
     {
         [TestMethod]
-        public void SumExpensesTest1()
+        public void ShortExpensesTest()
         {
             List<Expense> expenses = new List<Expense>
             {
@@ -487,22 +488,44 @@ namespace ExpenseTracker
                 new Expense { Name = "Dassbok", Category = "Böcker", Price = 80.0m },
                 new Expense { Name = "PT utbildning", Category = "Utbildning", Price = 10000.0m }
             };
-         
 
-            // Assert
-            Assert.AreEqual(10180.0m, includeVAT); // Ensure the sum with VAT is as expected.
-            Assert.AreEqual(10164.76m, excludeVAT); // Ensure the sum without VAT is as expected.
+            decimal expectedWithVAT = 10180.0m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 10164.76m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+            Assert.AreEqual(expectedWithoutVAT, actualWithoutVAT);
             
-            
-            
-            
-            // Write code here to test the SumExpenses method.
         }
 
         [TestMethod]
         public void SumExpensesTest2()
         {
-            // Write code here to test the SumExpenses method.
+            List<Expense> expenses = new List<Expense>
+            {
+                new Expense { Name = "Ost", Category = "Livsmedel", Price = 100.0m },
+                new Expense { Name = "Lax", Category = "Livsmedel", Price = 200.0m },
+                new Expense { Name = "Billys panpizza", Category = "Livsmedel", Price = 20.0m },
+
+                new Expense { Name = "The amazing Spiderman", Category = "Böcker", Price = 150.0m },
+                new Expense { Name = "Bibeln", Category = "Böcker", Price = 300.0m },
+
+                new Expense { Name = "Väktarutbildning", Category = "Utbildning", Price = 7500.0m },
+
+                new Expense { Name = "Batterier", Category = "Övrgit", Price = 180.0m },
+                new Expense { Name = "T-shirt", Category = "Övrgit", Price = 400.0m },
+            };
+
+            decimal expectedWithVAT = 10180.0m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 10164.76m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+            Assert.AreEqual(expectedWithoutVAT, actualWithoutVAT);
         }
 
         [TestMethod]
