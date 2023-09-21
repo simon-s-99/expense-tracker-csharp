@@ -11,12 +11,6 @@ using System.Linq;
 // Assignment nr. 2 
 // by Simon Sörqvist & Samuel Lööf 
 
-/*
- * Check before turning in: 
- * 
- * Write tests for sumexpenses 
- */
-
 namespace ExpenseTracker
 {
     public class Expense
@@ -32,15 +26,18 @@ namespace ExpenseTracker
         public static List<Expense> Expenses = new List<Expense>();
 
         // Static dictionary to hold values related to their respective VAT 
-        static Dictionary<string, decimal> CategoryVAT = new Dictionary<string, decimal>();
+        static Dictionary<string, decimal> CategoryVAT = new Dictionary<string, decimal>()
+        {
+            ["Utbildning"] = 0.00m,
+            ["Böcker"] = 0.06m,
+            ["Livsmedel"] = 0.12m,
+            ["Övrigt"] = 0.25m,
+        };
+
 
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-
-            // runs once on start to give dictionary all categories with
-            // associated VAT values (this is a workaround for testing purposes)
-            AddCategoriesToDictionary(); 
 
             // welcome message, runs once on start 
             Console.WriteLine("Välkommen!");
@@ -105,17 +102,6 @@ namespace ExpenseTracker
                     break; // breaks main-loop 
                 }
             } // <-- end of main-loop 
-        }
-
-        // AddCategoriesToDictionary exists only for testing purposes
-        // so that the dictionary is not empty when running the tests
-        // (this is a workaround)
-        public static void AddCategoriesToDictionary()
-        {
-            CategoryVAT.Add("Utbildning", 0.00m);
-            CategoryVAT.Add("Böcker", 0.06m);
-            CategoryVAT.Add("Livsmedel", 0.12m);
-            CategoryVAT.Add("Övrigt", 0.25m);
         }
 
         public static void AddExpense()
@@ -483,21 +469,115 @@ namespace ExpenseTracker
     public class UnitTests
     {
         [TestMethod]
-        public void SumExpensesTest1()
-        {
-            // Write code here to test the SumExpenses method.
+        public void ShortExpensesTest()
+        {         
+            List<Expense> expenses = new List<Expense>
+            {
+                new Expense { Name = "Kebab", Category = "Livsmedel", Price = 100.0m },
+                new Expense { Name = "Dassbok", Category = "Böcker", Price = 80.0m },
+                new Expense { Name = "PT utbildning", Category = "Utbildning", Price = 10000.0m }
+            };
+
+            decimal expectedWithVAT = 10180.0m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 10164.76m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+            //Typecast to double because "AreEqual" can't handle three parameters.
+           
+            Assert.AreEqual((double)expectedWithoutVAT, (double)actualWithoutVAT, 0.1);
+
         }
 
         [TestMethod]
-        public void SumExpensesTest2()
-        {
-            // Write code here to test the SumExpenses method.
+        public void LongExpensesTest()
+        {         
+            List<Expense> expenses = new List<Expense>
+            {
+                new Expense { Name = "Ost", Category = "Livsmedel", Price = 100.0m },
+                new Expense { Name = "Lax", Category = "Livsmedel", Price = 200.0m },
+                new Expense { Name = "Billys panpizza", Category = "Livsmedel", Price = 20.0m },
+
+                new Expense { Name = "The amazing Spiderman", Category = "Böcker", Price = 150.0m },
+                new Expense { Name = "Bibeln", Category = "Böcker", Price = 300.0m },
+
+                new Expense { Name = "Väktarutbildning", Category = "Utbildning", Price = 7500.0m },
+
+                new Expense { Name = "Batterier", Category = "Övrigt", Price = 180.0m },
+                new Expense { Name = "T-shirt", Category = "Övrigt", Price = 400.0m },
+            };
+
+            decimal expectedWithVAT = 8850.0m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 8674.24m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+            Assert.AreEqual((double)expectedWithoutVAT, (double)actualWithoutVAT,0.1);
         }
 
         [TestMethod]
-        public void SumExpensesTest3()
+        public void NoPriceTest()
         {
-            // Write code here to test the SumExpenses method.
+            List<Expense> expenses = new List<Expense>
+            {
+                new Expense { Name = "Lök", Category = "Livsmedel", Price = 0.0m },
+                new Expense { Name = "Yu-Gi-Oh", Category = "Böcker", Price = 0.0m },
+                new Expense { Name = "Tejp", Category = "Övrigt", Price = 0.0m },
+            };
+
+            decimal expectedWithVAT = 0.0m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 0.0m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+            
+
+            Assert.AreEqual((double)expectedWithoutVAT, (double)actualWithoutVAT, 0.1);
+        }
+
+        [TestMethod]
+        public void PriceWithDecimalsTest()
+        {
+            List<Expense> expenses = new List<Expense>
+            {
+                new Expense { Name = "Linspasta", Category = "Livsmedel", Price = 29.90m },
+                new Expense { Name = "Sriracha mayo", Category = "Livsmedel", Price = 49.90m },
+                new Expense { Name = "Koranen", Category = "Böcker", Price = 199.45m},
+                new Expense { Name = "Keps", Category = "Övrigt", Price = 199.90m },
+            };
+
+            decimal expectedWithVAT = 479.15m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 419.33m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+
+
+            Assert.AreEqual((double)expectedWithoutVAT, (double)actualWithoutVAT, 0.1);
+        }
+        [TestMethod]
+        public void EmptyList()
+        {
+            List<Expense> expenses = new List<Expense>();
+
+            decimal expectedWithVAT = 0.0m;
+            decimal actualWithVAT = Program.SumExpenses(expenses, true);
+
+            decimal expectedWithoutVAT = 0.0m;
+            decimal actualWithoutVAT = Program.SumExpenses(expenses, false);
+
+            Assert.AreEqual(expectedWithVAT, actualWithVAT);
+
+
+            Assert.AreEqual((double)expectedWithoutVAT, (double)actualWithoutVAT, 0.1);
         }
     }
 }
