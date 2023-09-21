@@ -14,7 +14,6 @@ using System.Linq;
 /*
  * Check before turning in: 
  * 
- * Removed unnecessary comments? i.e. Jakobs instruktioner?
  * Write tests for sumexpenses 
  */
 
@@ -22,7 +21,6 @@ namespace ExpenseTracker
 {
     public class Expense
     {
-        // Add variables here.
         public string Name;
         public string Category;
         public decimal Price;
@@ -39,7 +37,6 @@ namespace ExpenseTracker
         public static void Main()
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
-            // Write the main program code here.
 
             CategoryVAT.Add("Utbildning", 0.00m);
             CategoryVAT.Add("Böcker", 0.06m);
@@ -83,45 +80,7 @@ namespace ExpenseTracker
                 }
                 else if (mainMenu == 4) // remove an expense 
                 {
-                    if (Expenses.Count == 0)
-                    {
-                        Console.WriteLine("Det finns inga utgifter att ta bort.");
-                    }
-                    else
-                    {
-                        string[] expenseInfo = new string[Expenses.Count];
-                        for (int i = 0; i < Expenses.Count; i++)
-                        {
-                            expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
-                        }
-
-                        int removeMenu = ShowMenu("Välj utgift att ta bort:", expenseInfo);
-
-                        Console.Clear();
-
-                        int sureMenu = ShowMenu("Är du säker?", new[]
-                        {
-                            "Ja",
-                            "Nej"
-                        });
-
-                        Console.Clear();
-
-                        // remove expense 
-                        if (sureMenu == 0)
-                        {
-                            Expenses.RemoveAt(removeMenu);
-                            Console.WriteLine("Utgiften " +
-                                $"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}" +
-                                " har tagits bort.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Utgiften har INTE tagits bort.");
-                        }
-
-                        Console.WriteLine();
-                    }
+                    RemoveExpense();
                 }
                 else if (mainMenu == 5) // remove all expenses 
                 {
@@ -356,11 +315,54 @@ namespace ExpenseTracker
 
                 // removes the post you wish to edit
                 Expenses.RemoveAt(whichToEditMenu);
-
+                // and then inserts the edited version at the same place 
                 Expenses.Insert(whichToEditMenu, expense);
 
                 Console.Clear();
-                Console.WriteLine($"Utgiften {chosenExpenseName} har ändrats.");
+                Console.WriteLine($"Utgiften \"{chosenExpenseName}\" har ändrats.");
+                Console.WriteLine();
+            }
+        }
+
+        public static void RemoveExpense()
+        {
+            if (Expenses.Count == 0)
+            {
+                Console.WriteLine("Det finns inga utgifter att ta bort.");
+            }
+            else
+            {
+                string[] expenseInfo = new string[Expenses.Count];
+                for (int i = 0; i < Expenses.Count; i++)
+                {
+                    expenseInfo[i] = $"{Expenses[i].Name}: {Expenses[i].Price.ToString("0.00")} kr ({Expenses[i].Category})";
+                }
+
+                int removeMenu = ShowMenu("Välj utgift att ta bort:", expenseInfo);
+
+                Console.Clear();
+
+                int sureMenu = ShowMenu("Är du säker?", new[]
+                {
+                            "Ja",
+                            "Nej"
+                        });
+
+                Console.Clear();
+
+                // remove expense 
+                if (sureMenu == 0)
+                {
+                    Expenses.RemoveAt(removeMenu);
+                    Console.WriteLine("Utgiften " +
+                        $"\"{expenseInfo[removeMenu].Substring(0, expenseInfo[removeMenu].IndexOf(':'))}\"" +
+                        " har tagits bort.");
+                }
+                else
+                {
+                    Console.WriteLine("Utgiften har INTE tagits bort.");
+                }
+
                 Console.WriteLine();
             }
         }
@@ -371,7 +373,6 @@ namespace ExpenseTracker
         public static decimal SumExpenses(List<Expense> expenses, bool includeVAT)
         {
             decimal sum = 0;
-            // Implement the rest of this method here.
 
             foreach (Expense expense in expenses)
             {
