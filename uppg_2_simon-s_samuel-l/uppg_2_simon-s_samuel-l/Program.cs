@@ -94,6 +94,10 @@ namespace ExpenseTracker
                         Console.WriteLine();
                     }
                     // if subMenu == 1 control falls out to main-loop again 
+                    else
+                    {
+                        Console.Clear();
+                    }
                 }
                 else
                 {
@@ -250,11 +254,11 @@ namespace ExpenseTracker
                 // choose what to edit in the post
                 int editMenu = ShowMenu($"Vad vill du redigera i {chosenExpenseName}?", new[]
                 {
-                            "Namn",
-                            "Kategori",
-                            "Pris",
-                            "Avbryt och återgå till huvudmenyn"
-                        });
+                    "Namn",
+                    "Kategori",
+                    "Pris",
+                    "Avbryt och återgå till huvudmenyn"
+                });
 
                 Console.WriteLine();
 
@@ -340,9 +344,9 @@ namespace ExpenseTracker
 
                 int sureMenu = ShowMenu("Är du säker?", new[]
                 {
-                            "Ja",
-                            "Nej"
-                        });
+                    "Ja",
+                    "Nej"
+                });
 
                 Console.Clear();
 
