@@ -38,10 +38,9 @@ namespace ExpenseTracker
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
-            CategoryVAT.Add("Utbildning", 0.00m);
-            CategoryVAT.Add("Böcker", 0.06m);
-            CategoryVAT.Add("Livsmedel", 0.12m);
-            CategoryVAT.Add("Övrigt", 0.25m);
+            // runs once on start to give dictionary all categories with
+            // associated VAT values (this is a workaround for testing purposes)
+            AddCategoriesToDictionary(); 
 
             // welcome message, runs once on start 
             Console.WriteLine("Välkommen!");
@@ -106,6 +105,17 @@ namespace ExpenseTracker
                     break; // breaks main-loop 
                 }
             } // <-- end of main-loop 
+        }
+
+        // AddCategoriesToDictionary exists only for testing purposes
+        // so that the dictionary is not empty when running the tests
+        // (this is a workaround)
+        public static void AddCategoriesToDictionary()
+        {
+            CategoryVAT.Add("Utbildning", 0.00m);
+            CategoryVAT.Add("Böcker", 0.06m);
+            CategoryVAT.Add("Livsmedel", 0.12m);
+            CategoryVAT.Add("Övrigt", 0.25m);
         }
 
         public static void AddExpense()
